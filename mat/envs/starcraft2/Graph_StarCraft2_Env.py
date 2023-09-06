@@ -60,7 +60,7 @@ class Direction(enum.IntEnum):
     WEST = 3
 
 
-class RandomStarCraft2Env(MultiAgentEnv):
+class GraphStarCraft2Env(MultiAgentEnv):
     """The StarCraft II environment for decentralised multi-agent
     micromanagement scenarios.
     """
@@ -313,8 +313,8 @@ class RandomStarCraft2Env(MultiAgentEnv):
         self._controller = None
 
         # add for randomizing
-        self.agent_permutation = None
-        self.agent_recovery = None
+        # self.agent_permutation = None
+        # self.agent_recovery = None
 
         # Try to avoid leaking SC2 processes on shutdown
         atexit.register(lambda: self.close())
@@ -384,10 +384,10 @@ class RandomStarCraft2Env(MultiAgentEnv):
                          .reshape(self.map_x, self.map_y)), 1) / 255
 
     # add for randomizing
-    def permutate_idx(self):
-        self.agent_permutation = np.random.permutation(self.n_agents)
-        self.agent_recovery = [np.where(self.agent_permutation == i)[0][0] for i in range(self.n_agents)]
-        self.agent_recovery = np.array(self.agent_recovery)
+    # def permutate_idx(self):
+    #     self.agent_permutation = np.random.permutation(self.n_agents)
+    #     self.agent_recovery = [np.where(self.agent_permutation == i)[0][0] for i in range(self.n_agents)]
+    #     self.agent_recovery = np.array(self.agent_recovery)
 
     def reset(self):
         """Reset the environment. Required after each full episode.
@@ -401,7 +401,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
             self._restart()
 
         # add for randomizing
-        self.permutate_idx()
+        # self.permutate_idx()
 
         # Information kept for counting the reward
         self.death_tracker_ally = np.zeros(self.n_agents, dtype=np.float32)
@@ -448,9 +448,9 @@ class RandomStarCraft2Env(MultiAgentEnv):
             global_state = self.stacked_global_state.reshape(self.n_agents, -1)
 
         # add for randomizing
-        local_obs = np.array(local_obs)[self.agent_permutation]
-        global_state = np.array(global_state)[self.agent_permutation]
-        available_actions = np.array(available_actions)[self.agent_permutation]
+        # local_obs = np.array(local_obs)[self.agent_permutation]
+        # global_state = np.array(global_state)[self.agent_permutation]
+        # available_actions = np.array(available_actions)[self.agent_permutation]
 
         return local_obs, global_state, available_actions
 
@@ -481,7 +481,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
         actions_int = [int(a) for a in actions]
 
         # add for randomizing
-        actions_int = np.array(actions_int)[self.agent_recovery].tolist()
+        # actions_int = np.array(actions_int)[self.agent_recovery].tolist()
 
         self.last_action = np.eye(self.n_actions)[np.array(actions_int)]
 
@@ -548,11 +548,11 @@ class RandomStarCraft2Env(MultiAgentEnv):
                 global_state = self.stacked_global_state.reshape(self.n_agents, -1)
 
             # add for randomizing
-            local_obs = np.array(local_obs)[self.agent_permutation]
-            global_state = np.array(global_state)[self.agent_permutation]
-            dones = np.array(dones)[self.agent_permutation]
-            infos = np.array(infos)[self.agent_permutation]
-            available_actions = np.array(available_actions)[self.agent_permutation]
+            # local_obs = np.array(local_obs)[self.agent_permutation]
+            # global_state = np.array(global_state)[self.agent_permutation]
+            # dones = np.array(dones)[self.agent_permutation]
+            # infos = np.array(infos)[self.agent_permutation]
+            # available_actions = np.array(available_actions)[self.agent_permutation]
 
             return local_obs, global_state, [[0]]*self.n_agents, dones, infos, available_actions
 
@@ -642,12 +642,12 @@ class RandomStarCraft2Env(MultiAgentEnv):
             global_state = self.stacked_global_state.reshape(self.n_agents, -1)
 
         # add for randomizing
-        local_obs = np.array(local_obs)[self.agent_permutation]
-        global_state = np.array(global_state)[self.agent_permutation]
-        rewards = np.array(rewards)[self.agent_permutation]
-        dones = np.array(dones)[self.agent_permutation]
-        infos = np.array(infos)[self.agent_permutation]
-        available_actions = np.array(available_actions)[self.agent_permutation]
+        # local_obs = np.array(local_obs)[self.agent_permutation]
+        # global_state = np.array(global_state)[self.agent_permutation]
+        # rewards = np.array(rewards)[self.agent_permutation]
+        # dones = np.array(dones)[self.agent_permutation]
+        # infos = np.array(infos)[self.agent_permutation]
+        # available_actions = np.array(available_actions)[self.agent_permutation]
 
         return local_obs, global_state, rewards, dones, infos, available_actions
 
@@ -1154,7 +1154,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
                                       enemy_feats.flatten(),
                                       move_feats.flatten(),
                                       own_feats.flatten()))
-        
+
         # Agent id features
         if self.obs_agent_id:
             agent_id_feats[agent_id] = 1.
@@ -1175,7 +1175,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
             logging.debug("Enemy feats {}".format(enemy_feats))
             logging.debug("Ally feats {}".format(ally_feats))
             logging.debug("Own feats {}".format(own_feats))
- 
+
         return agent_obs
 
     def get_obs(self):

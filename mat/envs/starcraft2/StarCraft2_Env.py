@@ -1176,6 +1176,7 @@ class StarCraft2Env(MultiAgentEnv):
             logging.debug("Ally feats {}".format(ally_feats))
             logging.debug("Own feats {}".format(own_feats))
 
+        #print("agent_obs id ", agent_id, ": ",agent_obs)  
         return agent_obs
 
     def get_obs(self):
