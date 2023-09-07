@@ -1,6 +1,6 @@
 #!/bin/sh
 env="StarCraft2"
-map="6h_vs_8z"
+map="27m_vs_30m"
 algo="mat"
 exp="single"
 seed=1
