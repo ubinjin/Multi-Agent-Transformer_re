@@ -1154,7 +1154,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
                                       enemy_feats.flatten(),
                                       move_feats.flatten(),
                                       own_feats.flatten()))
-        
+
         # Agent id features
         if self.obs_agent_id:
             agent_id_feats[agent_id] = 1.
@@ -1175,7 +1175,7 @@ class RandomStarCraft2Env(MultiAgentEnv):
             logging.debug("Enemy feats {}".format(enemy_feats))
             logging.debug("Ally feats {}".format(ally_feats))
             logging.debug("Own feats {}".format(own_feats))
- 
+
         return agent_obs
 
     def get_obs(self):

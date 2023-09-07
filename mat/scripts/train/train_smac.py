@@ -11,6 +11,7 @@ sys.path.append("../../")
 from mat.config import get_config
 from mat.envs.starcraft2.StarCraft2_Env import StarCraft2Env
 from mat.envs.starcraft2.Random_StarCraft2_Env import RandomStarCraft2Env
+from mat.envs.starcraft2.Graph_StarCraft2_Env import GraphStarCraft2Env
 from mat.envs.starcraft2.smac_maps import get_map_params
 from mat.envs.env_wrappers import ShareSubprocVecEnv, ShareDummyVecEnv
 from mat.runner.shared.smac_runner import SMACRunner as Runner
@@ -21,10 +22,13 @@ def make_train_env(all_args):
     def get_env_fn(rank):
         def init_env():
             if all_args.env_name == "StarCraft2":
-                if all_args.random_agent_order:
-                    env = RandomStarCraft2Env(all_args)
+                if all_args.graph_agent_order:
+                        env = GraphStarCraft2Env(all_args)
                 else:
-                    env = StarCraft2Env(all_args)
+                    if all_args.random_agent_order:
+                        env = RandomStarCraft2Env(all_args)
+                    else:
+                        env = StarCraft2Env(all_args)
             else:
                 print("Can not support the " + all_args.env_name + "environment.")
                 raise NotImplementedError
@@ -75,7 +79,8 @@ def parse_args(args, parser):
     parser.add_argument("--use_state_agent", action='store_false', default=True)
     parser.add_argument("--use_mustalive", action='store_false', default=True)
     parser.add_argument("--add_center_xy", action='store_false', default=True)
-    parser.add_argument("--random_agent_order", action='store_true', default=False)
+    parser.add_argument("--random_agent_order", action='store_true', default=True)
+    parser.add_argument("--graph_agent_order", action='store_true', default=True)
 
     all_args = parser.parse_known_args(args)[0]
 
