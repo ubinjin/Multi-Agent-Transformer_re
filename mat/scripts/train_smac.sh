@@ -1,7 +1,7 @@
 #!/bin/sh
 env="StarCraft2"
-map="27m_vs_30m"
-algo="mat"
+map="5m_vs_6m"
+algo="mat_recurrent"
 exp="single"
 seed=1
 

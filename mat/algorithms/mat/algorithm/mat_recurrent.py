@@ -5,8 +5,8 @@ import math
 import numpy as np
 from torch.distributions import Categorical
 from mat.algorithms.utils.util import check, init
-from mat.algorithms.utils.transformer_act import discrete_autoregreesive_act
-from mat.algorithms.utils.transformer_act import discrete_parallel_act
+from mat.algorithms.utils.transformer_act import discrete_autoregreesive_act, discrete_autoregreesive_act_reverse, discrete_autoregreesive_act_reverse_x, discrete_autoregreesive_act_sequence
+from mat.algorithms.utils.transformer_act import discrete_parallel_act, discrete_parallel_act_sequence
 from mat.algorithms.utils.transformer_act import continuous_autoregreesive_act
 from mat.algorithms.utils.transformer_act import continuous_parallel_act
 
@@ -227,7 +227,6 @@ class MultiAgentTransformer(nn.Module):
                  n_block, n_embd, n_head, encode_state=False, device=torch.device("cpu"),
                  action_type='Discrete', dec_actor=False, share_actor=False):
         super(MultiAgentTransformer, self).__init__()
-
         self.n_agent = n_agent
         self.action_dim = action_dim
         self.tpdv = dict(dtype=torch.float32, device=device)
@@ -267,8 +266,9 @@ class MultiAgentTransformer(nn.Module):
         v_loc, obs_rep = self.encoder(state, obs)
         if self.action_type == 'Discrete':
             action = action.long()
-            action_log, entropy = discrete_parallel_act(self.decoder, obs_rep, obs, action, batch_size,
+            action_log, entropy = discrete_parallel_act_sequence(self.decoder, obs_rep, obs, action, batch_size,
                                                         self.n_agent, self.action_dim, self.tpdv, available_actions)
+            #print("action: ", action.size())
         else:
             action_log, entropy = continuous_parallel_act(self.decoder, obs_rep, obs, action, batch_size,
                                                           self.n_agent, self.action_dim, self.tpdv)
@@ -288,9 +288,10 @@ class MultiAgentTransformer(nn.Module):
         batch_size = np.shape(obs)[0]
         v_loc, obs_rep = self.encoder(state, obs)
         if self.action_type == "Discrete":
-            output_action, output_action_log = discrete_autoregreesive_act(self.decoder, obs_rep, obs, batch_size,
+            output_action, output_action_log = discrete_autoregreesive_act_sequence(self.decoder, obs_rep, obs, batch_size,
                                                                            self.n_agent, self.action_dim, self.tpdv,
                                                                            available_actions, deterministic)
+            #print("output_action: ", output_action.size())
         else:
             output_action, output_action_log = continuous_autoregreesive_act(self.decoder, obs_rep, obs, batch_size,
                                                                              self.n_agent, self.action_dim, self.tpdv,

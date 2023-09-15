@@ -23,11 +23,14 @@ def make_train_env(all_args):
         def init_env():
             if all_args.env_name == "StarCraft2":
                 if all_args.graph_agent_order:
+                        print("\n\ngraph\n\n")
                         env = GraphStarCraft2Env(all_args)
                 else:
                     if all_args.random_agent_order:
+                        print("\n\nrandom\n\n")
                         env = RandomStarCraft2Env(all_args)
                     else:
+                        print("\n\ndefault\n\n")
                         env = StarCraft2Env(all_args)
             else:
                 print("Can not support the " + all_args.env_name + "environment.")
@@ -80,7 +83,7 @@ def parse_args(args, parser):
     parser.add_argument("--use_mustalive", action='store_false', default=True)
     parser.add_argument("--add_center_xy", action='store_false', default=True)
     parser.add_argument("--random_agent_order", action='store_true', default=False)
-    parser.add_argument("--graph_agent_order", action='store_true', default=False)
+    parser.add_argument("--graph_agent_order", action='store_true', default=True)
 
     all_args = parser.parse_known_args(args)[0]
 

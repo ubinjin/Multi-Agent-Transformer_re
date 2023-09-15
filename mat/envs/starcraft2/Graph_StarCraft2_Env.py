@@ -392,6 +392,7 @@ class GraphStarCraft2Env(MultiAgentEnv):
         row_edges = np.sum(edges, axis=1)
 
         self.agent_permutation = np.argsort(row_edges)[::-1]
+        #self.agent_permutation = np.argsort(row_edges)
         #print(row_edges)
         #print(self.agent_permutation)
         self.agent_recovery = [np.where(self.agent_permutation == i)[0][0] for i in range(self.n_agents)]
