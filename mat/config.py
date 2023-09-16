@@ -7,7 +7,7 @@ def get_config():
 
     # prepare parameters
     parser.add_argument("--algorithm_name", type=str,
-                        default='mat', choices=["mat", "mat_dec", "mat_encoder", "mat_decoder", "mat_gru", "mat_recurrent"])
+                        default='mat', choices=["mat", "mat_dec", "mat_encoder", "mat_decoder", "mat_gru", "mat_recurrent", "mat_gat"])
 
     parser.add_argument("--experiment_name", type=str, default="check", help="an identifier to distinguish different experiment.")
     parser.add_argument("--seed", type=int, default=1, help="Random seed for numpy/torch")

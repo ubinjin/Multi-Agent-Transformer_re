@@ -83,7 +83,7 @@ def parse_args(args, parser):
     parser.add_argument("--use_mustalive", action='store_false', default=True)
     parser.add_argument("--add_center_xy", action='store_false', default=True)
     parser.add_argument("--random_agent_order", action='store_true', default=False)
-    parser.add_argument("--graph_agent_order", action='store_true', default=True)
+    parser.add_argument("--graph_agent_order", action='store_true', default=False)
 
     all_args = parser.parse_known_args(args)[0]
 
