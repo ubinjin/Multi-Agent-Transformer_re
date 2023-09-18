@@ -1,6 +1,6 @@
 #!/bin/sh
 env="StarCraft2"
-map="5m_vs_6m"
+map="6h_vs_8z"
 algo="mat_gat"
 exp="single"
 seed=1

@@ -102,10 +102,17 @@ class GATLayer(nn.Module):
         e = self.leaky_relu(e)
         
         attn = F.softmax(e, dim=3)
-        print("attn: ", attn.size())
-        print("h_prime: ", h_prime.size())
-        h_prime = torch.matmul(attn, h_prime).sum(dim=2)
-        return h_prime
+        # print("attn: ", attn.size())
+        # print("h_prime: ", h_prime.size())
+        outputs = []
+        for i in range(self.num_heads):
+            attn_head = attn[:, :, i, :]
+            h_prime_head = h_prime[:, :, i, :]
+            output_head = torch.bmm(attn_head, h_prime_head)
+            outputs.append(output_head)
+        h_prime_ = torch.stack(outputs, dim=2).sum(dim=2)
+
+        return h_prime_
 
 class GATEncodeBlock(nn.Module):
     def __init__(self, n_embd, n_head, n_agent):
