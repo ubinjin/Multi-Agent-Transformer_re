@@ -83,6 +83,48 @@ class EncodeBlock(nn.Module):
         x = self.ln2(x + self.mlp(x))
         return x
 
+class GATLayer(nn.Module):
+    def __init__(self, in_dim, out_dim, num_heads):
+        super(GATLayer, self).__init__()
+        self.num_heads = num_heads
+        self.W = nn.Linear(in_dim, out_dim * num_heads, bias=False)
+        self.a_left = nn.Linear(out_dim, 1, bias=False)
+        self.a_right = nn.Linear(out_dim, 1, bias=False)
+        self.leaky_relu = nn.LeakyReLU()
+
+    def forward(self, h):
+        bs, n = h.size(0), h.size(1)
+        h_prime = self.W(h).view(bs, n, self.num_heads, -1)
+        
+        e_left = self.a_left(h_prime)
+        e_right = self.a_right(h_prime)
+        e = e_left + e_right.permute(0, 2, 3, 1)
+        e = self.leaky_relu(e)
+        
+        attn = F.softmax(e, dim=3)
+        print("attn: ", attn.size())
+        print("h_prime: ", h_prime.size())
+        h_prime = torch.matmul(attn, h_prime).sum(dim=2)
+        return h_prime
+
+class GATEncodeBlock(nn.Module):
+    def __init__(self, n_embd, n_head, n_agent):
+        super(GATEncodeBlock, self).__init__()
+        
+        self.ln1 = nn.LayerNorm(n_embd)
+        self.gat = GATLayer(n_embd, n_embd, n_head)
+        self.ln2 = nn.LayerNorm(n_embd)
+        
+        self.mlp = nn.Sequential(
+            init_(nn.Linear(n_embd, 1 * n_embd), activate=True),
+            nn.GELU(),
+            init_(nn.Linear(1 * n_embd, n_embd))
+        )
+
+    def forward(self, x):
+        x = self.ln1(x + self.gat(x))
+        x = self.ln2(x + self.mlp(x))
+        return x
 
 class Encoder(nn.Module):
 
@@ -102,7 +144,7 @@ class Encoder(nn.Module):
                                          init_(nn.Linear(obs_dim, n_embd), activate=True), nn.GELU())
 
         self.ln = nn.LayerNorm(n_embd)
-        self.blocks = nn.Sequential(*[EncodeBlock(n_embd, n_head, n_agent) for _ in range(n_block)])
+        self.blocks = nn.Sequential(*[GATEncodeBlock(n_embd, n_head, n_agent) for _ in range(n_block)])
         self.head = nn.Sequential(init_(nn.Linear(n_embd, n_embd), activate=True), nn.GELU(), nn.LayerNorm(n_embd),
                                   init_(nn.Linear(n_embd, 1)))
 
