@@ -1,7 +1,8 @@
 #!/bin/bash
 env="StarCraft2_multi"
-maps=("27m_vs_30m" "8m" "5m_vs_6m" "MMM2" "1c3s5z" "2s_vs_1sc")
-algo="mat"
+# maps=("27m_vs_30m" "8m" "5m_vs_6m" "MMM2" "1c3s5z" "2s_vs_1sc")
+maps="MMM2"
+algo="mat_gat"
 exp="from_scratch_"
 seed=1
 

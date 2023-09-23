@@ -72,7 +72,7 @@ def main(args):
     if all_args.algorithm_name == "rmappo":
         all_args.use_recurrent_policy = True
         assert (all_args.use_recurrent_policy or all_args.use_naive_recurrent_policy), ("check recurrent policy!")
-    elif all_args.algorithm_name == "mappo" or all_args.algorithm_name == "mat" or all_args.algorithm_name == "mat_dec":
+    elif all_args.algorithm_name == "mappo" or all_args.algorithm_name == "mat" or all_args.algorithm_name == "mat_dec" or all_args.algorithm_name == "mat_gat":
         assert (all_args.use_recurrent_policy == False and all_args.use_naive_recurrent_policy == False), (
             "check recurrent policy!")
     else:

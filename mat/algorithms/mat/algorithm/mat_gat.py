@@ -102,8 +102,7 @@ class GATLayer(nn.Module):
         e = self.leaky_relu(e)
         
         attn = F.softmax(e, dim=3)
-        # print("attn: ", attn.size())
-        # print("h_prime: ", h_prime.size())
+        
         outputs = []
         for i in range(self.num_heads):
             attn_head = attn[:, :, i, :]
