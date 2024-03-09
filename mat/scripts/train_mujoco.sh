@@ -3,10 +3,10 @@ env="mujoco"
 scenario="HalfCheetah-v2"
 agent_conf="6x1"
 agent_obsk=0
-faulty_node=-1
+faulty_node=0
 #eval_faulty_node="-1 0 1 2 3 4 5"
 eval_faulty_node="-1"
-algo="mat"
+algo="mat_gat"
 exp="single"
 seed=1
 

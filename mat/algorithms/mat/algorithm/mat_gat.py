@@ -102,6 +102,11 @@ class GATLayer(nn.Module):
         e = self.leaky_relu(e)
         
         attn = F.softmax(e, dim=3)
+        # THRESHOLD = 0.95
+        # agent_num = 5
+        # thre = THRESHOLD / agent_num
+        # attn = torch.where(attn > thre, attn, torch.zeros_like(attn))
+        # #print(attn)
         
         outputs = []
         for i in range(self.num_heads):

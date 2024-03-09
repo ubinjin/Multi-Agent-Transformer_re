@@ -46,6 +46,7 @@ class SelfAttention(nn.Module):
         v = self.value(value).view(B, L, self.n_head, D // self.n_head).transpose(1, 2)  # (B, nh, L, hs)
 
         # causal attention: (B, nh, L, hs) x (B, nh, hs, L) -> (B, nh, L, L)
+        print(q @ k.transpose(-2, -1))
         att = (q @ k.transpose(-2, -1)) * (1.0 / math.sqrt(k.size(-1)))
 
         # self.att_bp = F.softmax(att, dim=-1)
